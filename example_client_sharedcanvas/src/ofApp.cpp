@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-     ofSetLogLevel(OF_LOG_VERBOSE);
+//     ofSetLogLevel(OF_LOG_VERBOSE);
     ofxXmlSettings settings;
 
     ofxLibwebsockets::ClientOptions options = ofxLibwebsockets::defaultClientOptions();
@@ -111,6 +111,7 @@ void ofApp::threadedFunction(){
                 
         #ifdef TARGET_OSX
         #else
+                usleep(microseconds);
                 wiringPiSPIDataRW(0, buf[x], length);
         #endif
             }
@@ -136,6 +137,7 @@ void ofApp::update(){
 
     //draw incoming drawing
     largeFbo.begin();
+    ofClear(0,0,0);
     map<int, Drawing*>::iterator it = drawings.begin();
     
     ofNoFill();
@@ -156,6 +158,7 @@ void ofApp::update(){
 
     //draw small canvas drawing
     fbo.begin();
+    ofClear(0,0,0);
     largeFbo.draw(0,0,fbo.getWidth(),fbo.getHeight());
     fbo.end();
     //draw small canvas drawing
@@ -237,7 +240,11 @@ void ofApp::onClose( ofxLibwebsockets::Event& args ){
     
     for (it; it != drawings.end(); ++it){
         Drawing * d = it->second;
-        if ( *d->conn == args.conn ){
+        
+//        cout << "*d->conn " << (*d->conn).getClientIP();
+//        cout << "args.conn " << (args.conn).getClientIP();
+//        cout << "args.conn " << args.conn;
+        if ( (*d->conn) == args.conn ){
             d->conn == NULL;
             client.send("{\"erase\":\"" + ofToString( it->second->_id ) + "\"}" );
             drawings.erase( it );
@@ -268,6 +275,10 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
                 id = d->_id;
                 color.set(r, g, b);
                 cout << "setup with id:" << id << endl;
+            }
+            else if(!args.json["delay"].isNull()){
+                cout << "delay:" << args.json["delay"].asInt() << endl;
+                microseconds = args.json["delay"].asInt();
             }
             else if (args.json["id"].asInt() != id){
                 cout << "received point" << endl;

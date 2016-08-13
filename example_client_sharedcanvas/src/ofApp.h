@@ -55,4 +55,5 @@ class ofApp : public ofBaseApp , ofThread{
         ofPixels pixels;
         int length;
 		unsigned char GAMMA [256];
+        unsigned int microseconds;
 };
