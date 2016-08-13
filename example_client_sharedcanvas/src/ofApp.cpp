@@ -42,7 +42,7 @@ void ofApp::setup(){
         GAMMA[i] = int(pow(float(i) / 255.0, 2.7) * 255.0  * 0.1 + 0.5) ;
     }
 
-    fbo.allocate(256,144,GL_RGB);
+    fbo.allocate(140,60,GL_RGB);
     largeFbo.allocate(ofGetWidth(),ofGetHeight(),GL_RGB);
 #ifdef TARGET_OSX
 #else
@@ -51,17 +51,19 @@ void ofApp::setup(){
 
     pixels.allocate(fbo.getWidth(),fbo.getHeight(),OF_IMAGE_COLOR);
     length = 4+(fbo.getHeight()*4)+4;
-    buf = (u_int8_t*)malloc(length);
-    buf[0] = 0x00;
-    buf[1] = 0x00;
-    buf[2] = 0x00;
-    buf[3] = 0x00;
+    buf.resize(fbo.getWidth());
+    for(int i = 0 ; i < buf.size() ; i++){
+        buf[i] = (u_int8_t*)malloc(length);
+        buf[i][0] = 0x00;
+        buf[i][1] = 0x00;
+        buf[i][2] = 0x00;
+        buf[i][3] = 0x00;
 
-    buf[length-4] = 0xFF;
-    buf[length-3] = 0xFF;
-    buf[length-2] = 0xFF;
-    buf[length-1] = 0xFF;
-    
+        buf[i][length-4] = 0xFF;
+        buf[i][length-3] = 0xFF;
+        buf[i][length-2] = 0xFF;
+        buf[i][length-1] = 0xFF;
+    }
     startThread();
 }
 void ofApp::exit(){
@@ -70,14 +72,14 @@ void ofApp::exit(){
     for(int y = 0 ; y < fbo.getHeight() ; y++){
 
         int index = (y*4)+4;
-        buf[index] = 0b11100000 | (0b00011111 & 0);
-        buf[index+1] = 0;
-        buf[index+2] = 0;
-        buf[index+3] = 0;
+        buf[0][index] = 0b11100000 | (0b00011111 & 0);
+        buf[0][index+1] = 0;
+        buf[0][index+2] = 0;
+        buf[0][index+3] = 0;
     }
 #ifdef TARGET_OSX
 #else
-    wiringPiSPIDataRW(0, buf, length);
+    wiringPiSPIDataRW(0, buf[0], length);
 #endif
 }
 
@@ -97,18 +99,18 @@ void ofApp::threadedFunction(){
 
                 //scan each pixels of the line
 
-                for(int y = 0 ; y <fbo.getHeight() ; y++){
-                    // apa102.setFrameData(y,frames[x][y]);
-                    ofColor c = pixels.getColor(x,y);
-                    int index = (y*4)+4;
-                    buf[index] = 0b11100000 | (0b00011111 & c.a);
-                    buf[index+1] = GAMMA[c.b];
-                    buf[index+2] = GAMMA[c.g];
-                    buf[index+3] = GAMMA[c.r];
-                }
+                // for(int y = 0 ; y <fbo.getHeight() ; y++){
+                //     // apa102.setFrameData(y,frames[x][y]);
+                //     ofColor c = pixels.getColor(x,y);
+                //     int index = (y*4)+4;
+                //     buf[x][index] = 0b11100000 | (0b00011111 & c.a);
+                //     buf[x][index+1] = GAMMA[c.b];
+                //     buf[x][index+2] = GAMMA[c.g];
+                //     buf[x][index+3] = GAMMA[c.r];
+                // }
 #ifdef TARGET_OSX
 #else
-                wiringPiSPIDataRW(0, buf, length);
+                wiringPiSPIDataRW(0, buf[x].data(), length);
 #endif
             }
 
@@ -158,25 +160,20 @@ void ofApp::update(){
     //draw small canvas drawing
     fbo.readToPixels(pixels);
 
-//     for(int x = 0 ; x < fbo.getWidth() ; x++){
+    for(int x = 0 ; x < fbo.getWidth() ; x++){
 
-//                 //scan each pixels of the line
+        //scan each pixels of the line
 
-//         for(int y = 0 ; y <fbo.getHeight() ; y++){
-//                     // apa102.setFrameData(y,frames[x][y]);
-//             ofColor c = pixels.getColor(x,y);
-//             int index = (y*4)+4;
-//             buf[index] = 0b11100000 | (0b00011111 & c.a);
-//             buf[index+1] = GAMMA[c.b];
-//             buf[index+2] = GAMMA[c.g];
-//             buf[index+3] = GAMMA[c.r];
-//         }
-// #ifdef TARGET_OSX
-// #else
-//         wiringPiSPIDataRW(0, buf, length);
-// #endif
-        
-    // }
+        for(int y = 0 ; y <fbo.getHeight() ; y++){
+            // apa102.setFrameData(y,frames[x][y]);
+            ofColor c = pixels.getColor(x,y);
+            int index = (y*4)+4;
+            buf[x][index] = 0b11100000 | (0b00011111 & c.a);
+            buf[x][index+1] = GAMMA[c.b];
+            buf[x][index+2] = GAMMA[c.g];
+            buf[x][index+3] = GAMMA[c.r];
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -254,60 +251,60 @@ void ofApp::onIdle( ofxLibwebsockets::Event& args ){
 
 //--------------------------------------------------------------
 void ofApp::onMessage( ofxLibwebsockets::Event& args ){
-  try{
-    cout<<"got message "<<args.message<<endl;
-    // trace out string messages or JSON messages!
-    if ( !args.json.isNull() ){
-        if (!args.json["setup"].isNull()){
-            Drawing * d = new Drawing();
-            d->_id = args.json["setup"]["id"].asInt();
-            // for some reason these come across as strings via JSON.stringify!
-            int r = ofToInt(args.json["setup"]["color"]["r"].asString());
-            int g = ofToInt(args.json["setup"]["color"]["g"].asString());
-            int b = ofToInt(args.json["setup"]["color"]["b"].asString());
-            d->color.set(r, g, b);
-            drawings.insert( make_pair( d->_id, d ));
-            id = d->_id;
-            color.set(r, g, b);
-            cout << "setup with id:" << id << endl;
+    try{
+        cout<<"got message "<<args.message<<endl;
+        // trace out string messages or JSON messages!
+        if ( !args.json.isNull() ){
+            if (!args.json["setup"].isNull()){
+                Drawing * d = new Drawing();
+                d->_id = args.json["setup"]["id"].asInt();
+                // for some reason these come across as strings via JSON.stringify!
+                int r = ofToInt(args.json["setup"]["color"]["r"].asString());
+                int g = ofToInt(args.json["setup"]["color"]["g"].asString());
+                int b = ofToInt(args.json["setup"]["color"]["b"].asString());
+                d->color.set(r, g, b);
+                drawings.insert( make_pair( d->_id, d ));
+                id = d->_id;
+                color.set(r, g, b);
+                cout << "setup with id:" << id << endl;
+            }
+            else if (args.json["id"].asInt() != id){
+                cout << "received point" << endl;
+                ofPoint point = ofPoint( args.json["point"]["x"].asFloat(), args.json["point"]["y"].asFloat() );
+
+                // for some reason these come across as strings via JSON.stringify!
+                int r = ofToInt(args.json["color"]["r"].asString());
+                int g = ofToInt(args.json["color"]["g"].asString());
+                int b = ofToInt(args.json["color"]["b"].asString());
+                ofColor color = ofColor( r, g, b );
+
+                int _id = args.json["id"].asInt();
+
+                map<int, Drawing*>::const_iterator it = drawings.find(_id);
+                Drawing * d;
+                if (it!=drawings.end()){
+                    d = it->second;
+                }
+                else {
+                    d = new Drawing();
+                    d->_id = _id;
+                    // for some reason these come across as strings via JSON.stringify!
+                    int r = ofToInt(args.json["color"]["r"].asString());
+                    int g = ofToInt(args.json["color"]["g"].asString());
+                    int b = ofToInt(args.json["color"]["b"].asString());
+                    d->color.set(r, g, b);
+                    drawings.insert( make_pair( d->_id, d ));
+                    cout << "new drawing with id:" << _id << endl;
+                }
+                d->addPoint(point);
+            }
+        }else {
+            
         }
-        else if (args.json["id"].asInt() != id){
-          cout << "received point" << endl;
-          ofPoint point = ofPoint( args.json["point"]["x"].asFloat(), args.json["point"]["y"].asFloat() );
-
-            // for some reason these come across as strings via JSON.stringify!
-          int r = ofToInt(args.json["color"]["r"].asString());
-          int g = ofToInt(args.json["color"]["g"].asString());
-          int b = ofToInt(args.json["color"]["b"].asString());
-          ofColor color = ofColor( r, g, b );
-
-          int _id = args.json["id"].asInt();
-
-          map<int, Drawing*>::const_iterator it = drawings.find(_id);
-          Drawing * d;
-          if (it!=drawings.end()){
-            d = it->second;
-        }
-        else {
-          d = new Drawing();
-          d->_id = _id;
-              // for some reason these come across as strings via JSON.stringify!
-          int r = ofToInt(args.json["color"]["r"].asString());
-          int g = ofToInt(args.json["color"]["g"].asString());
-          int b = ofToInt(args.json["color"]["b"].asString());
-          d->color.set(r, g, b);
-          drawings.insert( make_pair( d->_id, d ));
-          cout << "new drawing with id:" << _id << endl;
-      }
-
-      d->addPoint(point);
-  }
-} else {
-}
-}
-catch(exception& e){
-    ofLogError() << e.what();
-}
+    }
+    catch(exception& e){
+        ofLogError() << e.what();
+    }
 }
 
 //--------------------------------------------------------------

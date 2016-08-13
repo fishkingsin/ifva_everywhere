@@ -48,7 +48,7 @@ class ofApp : public ofBaseApp , ofThread{
  		ofxAPA102 apa102;
 #endif
 		void threadedFunction();
-		u_int8_t* buf;
+		vector<u_int8_t*> buf;
 
 		ofFbo fbo;
 		ofFbo largeFbo;
