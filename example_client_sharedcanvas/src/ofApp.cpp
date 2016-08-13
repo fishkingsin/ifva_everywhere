@@ -106,9 +106,10 @@ void ofApp::threadedFunction(){
                     buf[index+2] = GAMMA[c.g];
                     buf[index+3] = GAMMA[c.r];
                 }
-
+#ifdef TARGET_OSX
+#else
                 wiringPiSPIDataRW(0, buf, length);
-
+#endif
             }
 
             unlock();
