@@ -24,6 +24,9 @@ $(window).load(function() {
 		canvas.onmousedown 	= onMouseDown;
 		canvas.onmouseup 	= onMouseUp;
 		canvas.onmousemove 	= onMouseMoved;
+		canvas.addEventListener("touchstart", onMouseDown, false);
+		canvas.addEventListener("touchend", onMouseUp, false);
+		canvas.addEventListener("touchmove", onMouseMoved, false);
 		ctx			= canvas.getContext('2d');
 		canvas.width  = window.innerWidth;
 		canvas.height = window.innerHeight;
@@ -33,6 +36,11 @@ $(window).load(function() {
 		//   e.preventDefault();
 		// 	onMouseDown(e);
 		// },false);
+		//target the entire page, and listen for touch events
+		$('html, body').on('touchstart touchmove', function(e){ 
+		     //prevent native touch activity like scrolling
+		     e.preventDefault(); 
+		});
 	} else {
 		alert("Sorry, your browser doesn't support canvas!");
 	}
