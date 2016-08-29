@@ -192,23 +192,23 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    ofPoint p(x,y);
-    
-    map<int, Drawing*>::iterator it = drawings.find(0);
-    Drawing * d = it->second;
-    d->addPoint(p);
-    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+//    ofPoint p(x,y);
+//    
+//    map<int, Drawing*>::iterator it = drawings.find(0);
+//    Drawing * d = it->second;
+//    d->addPoint(p);
+//    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
 
-    ofPoint p(x,y);
-    
-    map<int, Drawing*>::iterator it = drawings.find(0);
-    Drawing * d = it->second;
-    d->addPoint(p);
-    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+//    ofPoint p(x,y);
+//    
+//    map<int, Drawing*>::iterator it = drawings.find(0);
+//    Drawing * d = it->second;
+//    d->addPoint(p);
+//    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------

@@ -10,7 +10,8 @@ void ofApp::setup(){
     options.reconnect = true;
     options.reconnectInterval = 5000;
     
-
+    width = 140;
+    height = 60;
     if( settings.loadFile("settings.xml") ){
         ofLogVerbose() << "loaded settings.xml";
         int numPtTags = settings.getNumTags("SETTINGS:SERVER");
@@ -20,6 +21,8 @@ void ofApp::setup(){
             ofLogVerbose() << "loaded settings server "<<server;
             options.host = server;
             options.port = 9092;
+            width = settings.getValue("SETTINGS:WIDTH",140);
+            height = settings.getValue("SETTINGS:HEIGHT",60);
         }
 
 
@@ -28,7 +31,8 @@ void ofApp::setup(){
         options.port = 9092;
         ofLogVerbose() << "client.connect(localhost, 9093)";
     }
-
+    
+    ofSetWindowShape(width, height);
     client.connect(options);
     // connect to either the "server blob" or "server blob video" example!
     
@@ -42,7 +46,7 @@ void ofApp::setup(){
         GAMMA[i] = int(pow(float(i) / 255.0, 2.7) * 255.0  * 0.1 + 0.5) ;
     }
 
-    fbo.allocate(140,60,GL_RGB);
+    fbo.allocate(width,height,GL_RGB);
     largeFbo.allocate(ofGetWidth(),ofGetHeight(),GL_RGB);
 #ifdef TARGET_OSX
 #else
@@ -149,7 +153,7 @@ void ofApp::update(){
 //        ofSetLineWidth(10);
         for ( int i=0; i<(int)d->points.size(); i++){
 //            ofVertex( d->points[i].x,d->points[i].y);
-            ofDrawRectangle(d->points[i].x,d->points[i].y,10,10);
+            ofDrawRectangle(d->points[i].x,d->points[i].y,1,1);
         }
 //        ofEndShape(false);
     }
@@ -280,6 +284,10 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
             else if(!args.json["delay"].isNull()){
                 cout << "delay:" << args.json["delay"].asInt() << endl;
                 microseconds = args.json["delay"].asInt();
+            }
+            else if(!args.json["erase"].isNull()){
+                cout << "erase:" << args.json["erase"].asInt() << endl;
+                drawings.erase(args.json["erase"].asInt());
             }
             else if (args.json["id"].asInt() != id){
                 cout << "received point" << endl;

@@ -56,4 +56,6 @@ class ofApp : public ofBaseApp , ofThread{
         int length;
 		unsigned char GAMMA [256];
         unsigned int microseconds;
+        int width ;
+        int height;
 };

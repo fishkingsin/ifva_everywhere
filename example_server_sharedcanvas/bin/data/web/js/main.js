@@ -11,10 +11,10 @@ var id 		 = -1;
 var sketches = {};
 
 $(window).load(function() {
-	setupSocket();
+	socket = setupSocket();
 	
 	// document.getElementById("brow").textContent = " " + BrowserDetect.browser + " "
-	+ BrowserDetect.version +" " + BrowserDetect.OS +" ";
+	// + BrowserDetect.version +" " + BrowserDetect.OS +" ";
 
 	// messageDiv 	= document.getElementById("messages");
 	// statusDiv	= document.getElementById("status");
@@ -59,13 +59,17 @@ function sendMessageForm(){
 
 var bMouseDown = false;
 function onMouseDown( e ){
+	mouseX = (e.changedTouches ? e.changedTouches[0].pageX : e.pageX);
+	mouseY = (e.changedTouches ? e.changedTouches[0].pageY : e.pageY);
 	bMouseDown = true;
-	onMouseDraw( e.layerX, e.layerY );
+	onMouseDraw( mouseX, mouseY  );
 }
 
 function onMouseMoved( e ){
+	mouseX = (e.changedTouches ? e.changedTouches[0].pageX : e.pageX);
+	mouseY = (e.changedTouches ? e.changedTouches[0].pageY : e.pageY);
 	if ( bMouseDown ){
-		onMouseDraw( e.layerX, e.layerY );
+		onMouseDraw( mouseX, mouseY );
 	}
 }
 
@@ -115,18 +119,18 @@ function setupSocket(){
 	// get_appropriate_ws_url is a nifty function by the libwebsockets people
 	// it decides what the websocket url is based on the broswer url
 	// e.g. https://mygreathost:9099 = wss://mygreathost:9099
-	socket = new WebSocket(get_appropriate_ws_url());
+	var _socket = new WebSocket(get_appropriate_ws_url());
 	
 	// open
 	try {
-		socket.onopen = function() {
+		_socket.onopen = function() {
 			console.log("open");
 			// statusDiv.style.backgroundColor = "#000000";
 			// statusDiv.textContent = " websocket connection opened ";
 		} 
 
 		// received message
-		socket.onmessage =function got_packet(msg) {
+		_socket.onmessage =function got_packet(msg) {
 			var message = JSON.parse(msg.data);
 
 			if ( message.setup ){
@@ -156,11 +160,13 @@ function setupSocket(){
 			renderCanvas();
 		}
 
-		socket.onclose = function(){
+		_socket.onclose = function(){
 			// statusDiv.style.backgroundColor = "#ff4040";	
 			// statusDiv.textContent = " websocket connection CLOSED ";
 		}
+		return _socket;
 	} catch(exception) {
 		alert('<p>Error' + exception);  
 	}
+	return null;
 }
