@@ -22,11 +22,11 @@ io.on('connection', function (socket){
 						g:randomInt(0,255),
 						b:randomInt(0,255)
 					},id:socket.id});
-		io.sockets.emit('setup', msg);
+		socket.emit('setup', msg);
 
 		socket.on('point',function (data){
 			var msg = JSON.stringify(data);
-			// console.log(msg);
+			console.log(msg);
 			io.sockets.emit('point',msg);
 		})
 		socket.on('disconnect',function (data){
