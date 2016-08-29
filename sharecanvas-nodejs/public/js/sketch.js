@@ -33,12 +33,14 @@ function setup(){
 		newDrawing();
 	});
 	socket.on('erase',function (message){
+		console.log(message);
 		var object = JSON.parse(message);
 		var _id = object.erase;
 		if ( sketches[_id] ){
 			delete sketches[_id];
 		}
-		// renderCanvas();
+		background(255);
+		newDrawing();
 	})
 }
 function newDrawing(){
@@ -65,7 +67,7 @@ function mouseDragged(){
 		if ( sketches[id].points.length > 500 ){
 			sketches[id].points.shift();
 		}
-		var msg = JSON.stringify(point);
+		// var msg = JSON.stringify(point);
 		
 		socket.emit('point',point);
 		// renderCanvas();
