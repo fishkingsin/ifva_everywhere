@@ -150,7 +150,7 @@ void ofApp::update(){
         Drawing * d = it->second;
         ofSetColor( d->color );
         ofBeginShape();
-       ofSetLineWidth(10);
+       ofSetLineWidth(1);
         for ( int i=0; i<(int)d->points.size(); i++){
            ofVertex( d->points[i].x,d->points[i].y);
             // ofDrawRectangle(d->points[i].x,d->points[i].y,1,1);
