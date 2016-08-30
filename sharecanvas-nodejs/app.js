@@ -1,5 +1,5 @@
 var express = require('express');
-
+const util = require('util')
 var app = express();
 
 var server = require('http').createServer(app);
@@ -49,9 +49,9 @@ io.on('connection', function (socket){
 			sketches[_id] = {color:c, points:[]};
 		}
 		sketches[_id].points.push( data.point );
-		
 
-		console.log(msg);
+
+		// console.log(msg);
 		io.sockets.emit('point',msg);
 	})
 	socket.on('disconnect',function (data){
@@ -70,5 +70,5 @@ io.on('connection', function (socket){
 
 function randomInt(minimum, maximum){
 
-	return parseInt(minimum + (Math.random() * maximum)); 
+	return parseInt(minimum + (Math.random() * maximum));
 }
