@@ -144,20 +144,20 @@ void ofApp::update(){
     ofClear(0,0,0);
     map<int, Drawing*>::iterator it = drawings.begin();
     
-//    ofNoFill();
+    ofNoFill();
     
     for (it; it != drawings.end(); ++it){
         Drawing * d = it->second;
         ofSetColor( d->color );
         ofBeginShape();
-//        ofSetLineWidth(10);
+       ofSetLineWidth(10);
         for ( int i=0; i<(int)d->points.size(); i++){
-//            ofVertex( d->points[i].x,d->points[i].y);
-            ofDrawRectangle(d->points[i].x,d->points[i].y,1,1);
+           ofVertex( d->points[i].x,d->points[i].y);
+            // ofDrawRectangle(d->points[i].x,d->points[i].y,1,1);
         }
-//        ofEndShape(false);
+       ofEndShape(false);
     }
-//    ofFill();
+    ofFill();
     largeFbo.end();
     //draw incoming drawing
 
