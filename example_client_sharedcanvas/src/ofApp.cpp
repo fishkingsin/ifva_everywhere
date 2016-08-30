@@ -51,6 +51,8 @@ void ofApp::setup(){
 #ifdef TARGET_OSX
 #else
     apa102.setup(fbo.getHeight());
+//    wiringPiSPISetupMode(0,32000000,1)
+    wiringPiSPISetupMode(0,16000000,1)
 #endif
 
     pixels.allocate(fbo.getWidth(),fbo.getHeight(),OF_IMAGE_COLOR);
