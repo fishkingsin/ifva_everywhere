@@ -1,5 +1,4 @@
 #include "ofApp.h"
-
 //--------------------------------------------------------------
 void ofApp::setup(){
 //     ofSetLogLevel(OF_LOG_VERBOSE);
@@ -51,7 +50,6 @@ void ofApp::setup(){
 #ifdef TARGET_OSX
 #else
     apa102.setup(fbo.getHeight());
-    wiringPiSPISetupMode(0,16000000,1)
 #endif
 
     pixels.allocate(fbo.getWidth(),fbo.getHeight(),OF_IMAGE_COLOR);
