@@ -82,7 +82,7 @@ void ofApp::exit(){
     }
 #ifdef TARGET_OSX
 #else
-    wiringPiSPIDataRW(0, buf[0], length);
+    apa102.send(buf[0], length);
 #endif
 }
 
@@ -115,7 +115,7 @@ void ofApp::threadedFunction(){
         #ifdef TARGET_OSX
         #else
                 usleep(microseconds);
-                wiringPiSPIDataRW(0, buf[x], length);
+                apa102.send(buf[x], length);
         #endif
             }
 
