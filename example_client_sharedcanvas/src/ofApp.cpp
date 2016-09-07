@@ -17,9 +17,10 @@ void ofApp::setup(){
 
         if(numPtTags > 0){
             string server = settings.getValue("SETTINGS:SERVER","localhost");
+            int port = settings.getValue("SETTINGS:port",9092);
             ofLogVerbose() << "loaded settings server "<<server;
             options.host = server;
-            options.port = 9092;
+            options.port = port;
             width = settings.getValue("SETTINGS:WIDTH",140);
             height = settings.getValue("SETTINGS:HEIGHT",60);
         }
@@ -28,7 +29,7 @@ void ofApp::setup(){
     }else{
         options.host = "localhost";
         options.port = 9092;
-        ofLogVerbose() << "client.connect(localhost, 9093)";
+        ofLogVerbose() << "client.connect(localhost, 9092)";
     }
     
     ofSetWindowShape(width, height);
