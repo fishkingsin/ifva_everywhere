@@ -51,7 +51,7 @@ void ofApp::draw(){
         ofDrawBitmapString("WebSocket server setup at "+ofToString( server.getPort() ) + ( server.usingSSL() ? " with SSL" : " without SSL"), 20, 20);
         
         ofSetColor(150);
-        ofDrawBitmapString("Click anywhere to open up client example", 20, 40);  
+        ofDrawBitmapString("Click anywhere to open up client example", 20, 40);
     } else {
         ofDrawBitmapString("WebSocket setup failed :(", 20,20);
     }
@@ -130,103 +130,147 @@ void ofApp::onIdle( ofxLibwebsockets::Event& args ){
 void ofApp::onMessage( ofxLibwebsockets::Event& args ){
     cout<<"got message "<<args.message<<endl;
     
-  try{
-    // trace out string messages or JSON messages!
-    if ( !args.json.isNull() ){
-        ofPoint point = ofPoint( args.json["point"]["x"].asFloat(), args.json["point"]["y"].asFloat() );
-        
-        // for some reason these come across as strings via JSON.stringify!
-        int r = ofToInt(args.json["color"]["r"].asString());
-        int g = ofToInt(args.json["color"]["g"].asString());
-        int b = ofToInt(args.json["color"]["b"].asString());
-        ofColor color = ofColor( r, g, b );
-        
-        int _id = ofToInt(args.json["id"].asString());
-        
-        map<int, Drawing*>::const_iterator it = drawings.find(_id);
-        Drawing * d = it->second;
-        if(d!=NULL){
-            d->addPoint(point);
+    try{
+        // trace out string messages or JSON messages!
+        if ( !args.json.isNull() ){
+            ofPoint point = ofPoint( args.json["point"]["x"].asFloat(), args.json["point"]["y"].asFloat() );
+            
+            // for some reason these come across as strings via JSON.stringify!
+            int r = ofToInt(args.json["color"]["r"].asString());
+            int g = ofToInt(args.json["color"]["g"].asString());
+            int b = ofToInt(args.json["color"]["b"].asString());
+            ofColor color = ofColor( r, g, b );
+            
+            int _id = ofToInt(args.json["id"].asString());
+            
+            map<int, Drawing*>::const_iterator it = drawings.find(_id);
+            Drawing * d = it->second;
+            if(d!=NULL){
+                d->addPoint(point);
+            }
+        } else {
         }
-    } else {
-    }
-    // send all that drawing back to everybody except this one
-    vector<ofxLibwebsockets::Connection *> connections = server.getConnections();
-    for ( int i=0; i<connections.size(); i++){
-        if ( (*connections[i]) != args.conn ){
-            connections[i]->send( args.message );
+        // send all that drawing back to everybody except this one
+        vector<ofxLibwebsockets::Connection *> connections = server.getConnections();
+        for ( int i=0; i<connections.size(); i++){
+            if ( (*connections[i]) != args.conn ){
+                connections[i]->send( args.message );
+            }
         }
     }
-  }
-  catch(exception& e){
-    ofLogError() << e.what();
-  }
+    catch(exception& e){
+        ofLogError() << e.what();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::onBroadcast( ofxLibwebsockets::Event& args ){
-    cout<<"got broadcast "<<args.message<<endl;    
+    cout<<"got broadcast "<<args.message<<endl;
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if ( key == ' ' ){
-        string url = "http";
-        if ( server.usingSSL() ){
-            url += "s";
+    switch(key){
+        case OF_KEY_BACKSPACE:
+        {
+            for ( auto & it : drawings){
+                Drawing * d = it.second;
+                if(d->points.size()>0){
+                    string jsonString = d->getPointsJSONString("record");
+                    ofLogNotice("jsonString") << jsonString;
+                    Json::Value root;
+                    Json::Reader reader;
+                    bool parsingSuccessful = reader.parse( jsonString.c_str(), root );     //parse process
+                    if ( !parsingSuccessful )
+                    {
+                        std::cout  << "Failed to parse"
+                        << reader.getFormattedErrorMessages();
+                        return 0;
+                    }
+                    ofBuffer buffer;
+                    buffer.append(jsonString);
+                    ostringstream filename;
+                    filename << ofGetTimestampString() << ".json";
+                    ofFile file;
+                    file.open(filename.str(),ofFile::WriteOnly);
+                    file<<jsonString;
+                    std::cout << root["record"]["id"].asInt() << std::endl;
+                    toDelete.push_back(it.second);
+                    d->conn == NULL;
+                }
+                
+            }
         }
-        url += "://localhost:" + ofToString( server.getPort() );
-        ofLaunchBrowser(url);
+            break;
+        case 'l':{
+            ofDirectory dir;
+            dir.allowExt("json");
+            dir.listDir("");
+            for (auto & f : dir.getFiles()){
+                ofLogNotice ("json ") << f.getFileName();
+                jsonFiles.push_back(f);
+            }
+        }
+            break;
+        case ' ':
+            string url = "http";
+            if ( server.usingSSL() ){
+                url += "s";
+            }
+            url += "://localhost:" + ofToString( server.getPort() );
+            ofLaunchBrowser(url);
+            break;
+            
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-//    ofPoint p(x,y);
-//    
-//    map<int, Drawing*>::iterator it = drawings.find(0);
-//    Drawing * d = it->second;
-//    d->addPoint(p);
-//    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+    //    ofPoint p(x,y);
+    //
+    //    map<int, Drawing*>::iterator it = drawings.find(0);
+    //    Drawing * d = it->second;
+    //    d->addPoint(p);
+    //    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
-//    ofPoint p(x,y);
-//    
-//    map<int, Drawing*>::iterator it = drawings.find(0);
-//    Drawing * d = it->second;
-//    d->addPoint(p);
-//    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+    
+    //    ofPoint p(x,y);
+    //
+    //    map<int, Drawing*>::iterator it = drawings.find(0);
+    //    Drawing * d = it->second;
+    //    d->addPoint(p);
+    //    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::gotMessage(ofMessage msg){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
-
+    
 }

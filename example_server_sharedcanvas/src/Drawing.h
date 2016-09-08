@@ -2,7 +2,7 @@
 //  Drawing.h
 //  SharedCanvas
 //
-//  Created by Brett Renfer on 5/29/12. 
+//  Created by Brett Renfer on 5/29/12.
 //
 
 class Drawing {
@@ -30,10 +30,28 @@ public:
         
         stringstream jsonstring;
         if ( object ){
-            jsonstring<<"{\"color\":{\"r\":\""<<r<<"\",\"g\":\""<<g<<"\",\"b\":\""<<b<<"\"}}";   
+            jsonstring<<"{\"color\":{\"r\":\""<<r<<"\",\"g\":\""<<g<<"\",\"b\":\""<<b<<"\"}}";
         } else {
             jsonstring<<"\"color\":{\"r\":\""<<r<<"\",\"g\":\""<<g<<"\",\"b\":\""<<b<<"\"}";
         }
+        return jsonstring.str();
+    }
+    string getPointJSON( bool object=false){
+        
+        int r = color.r;
+        int g = color.g;
+        int b = color.b;
+        
+        stringstream jsonstring;
+        jsonstring << "\"points\":[" ;
+        for ( auto & p : points){
+            jsonstring<<"{\"point\":{\"x\":"<<p.x<<",\"y\":"<<p.y << "}}";
+            if(points.back() != p){
+                jsonstring << ",";
+            }
+            
+        }
+        jsonstring << "]" ;
         return jsonstring.str();
     }
     
@@ -44,6 +62,19 @@ public:
             jsonstring << "{\"" + wrapper << "\":";
         }
         jsonstring<<"{" +getColorJSON()+",\"id\":"<< _id<<"}";
+        
+        if ( wrapper != "" ){
+            jsonstring << "}";
+        }
+        return jsonstring.str();
+    }
+    string getPointsJSONString( string wrapper){
+        
+        stringstream jsonstring;
+        if ( wrapper != "" ){
+            jsonstring << "{\"" + wrapper << "\":";
+        }
+        jsonstring<<"{" +getColorJSON()<<",\"id\":"<< _id<<"},"<<getPointJSON();
         
         if ( wrapper != "" ){
             jsonstring << "}";
