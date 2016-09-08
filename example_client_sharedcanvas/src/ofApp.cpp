@@ -1,7 +1,7 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
-//     ofSetLogLevel(OF_LOG_VERBOSE);
+     ofSetLogLevel(OF_LOG_VERBOSE);
     ofxXmlSettings settings;
 
     ofxLibwebsockets::ClientOptions options = ofxLibwebsockets::defaultClientOptions();
@@ -280,6 +280,8 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
                 id = d->_id;
                 color.set(r, g, b);
                 cout << "setup with id:" << id << endl;
+                client.send( "{\"id\":"+ ofToString(id) + ",\"size\":{\"width\":\""+ ofToString(fbo.getWidth())+"\",\"height\":\""+ofToString(fbo.getHeight())+"\"}}");
+                
             }
             else if(!args.json["delay"].isNull()){
                 cout << "delay:" << args.json["delay"].asInt() << endl;

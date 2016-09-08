@@ -26,7 +26,7 @@ void ofApp::setup(){
     
     drawings.insert( make_pair( d->_id, d ));
     panel.setup();
-    delay.set("delay", 0,0,60*100);
+    delay.set("delay", 0,0,100);
     panel.add(delay);
     delay.addListener(this, &ofApp::onParaChanged);
 }
