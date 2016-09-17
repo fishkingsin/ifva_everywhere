@@ -213,12 +213,15 @@ void ofApp::keyPressed(int key){
                 ofLogNotice ("json ") << f.getFileName();
                 jsonFiles.push_back(f);
             }
-            Json::Value root;
-            Json::Reader reader;
+            
             int index = ofRandom(n);
             ofFile openFile(jsonFiles[index].getAbsolutePath());
-            ofLogNotice() << "openFile.readToBuffer() " << openFile.readToBuffer();
-            bool parsingSuccessful = reader.parse( openFile.readToBuffer() , root );     //parse process
+            
+            string jsonString = openFile.readToBuffer();
+            ofLogNotice() << "jsonString " << jsonString;
+            Json::Value root;
+            Json::Reader reader;
+            bool parsingSuccessful = reader.parse( jsonString , root );     //parse process
             if(parsingSuccessful){
                 
                 ofLogNotice("parsingSuccessful setup") << root["setup"].toStyledString();
@@ -260,8 +263,6 @@ void ofApp::keyPressed(int key){
                 if(it != jsonFiles.end())
                     jsonFiles.erase(it);
                 break;
-                
-            }else{
                 
             }
             
