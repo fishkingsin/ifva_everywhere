@@ -131,6 +131,7 @@ function setupSocket(){
 
 		// received message
 		_socket.onmessage =function got_packet(msg) {
+			console.log(msg.data);
 			var message = JSON.parse(msg.data);
 
 			if ( message.setup ){
@@ -140,6 +141,7 @@ function setupSocket(){
 
 				sketches[id] = {color:color, points:[]};
 			} else if ( message.point ){
+				console.log(message.point);
 				var c = message.color;
 				var _id = message.id;
 

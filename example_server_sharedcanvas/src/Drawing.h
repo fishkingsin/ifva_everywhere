@@ -37,21 +37,29 @@ public:
         return jsonstring.str();
     }
     string getPointJSON( bool object=false){
-        
+        std::mutex mtx;
         int r = color.r;
         int g = color.g;
         int b = color.b;
         
         stringstream jsonstring;
+        mtx.lock();
         jsonstring << "\"points\":[" ;
+        int i = 0 ;
         for ( auto & p : points){
-            jsonstring<<"{\"point\":{\"x\":"<<p.x<<",\"y\":"<<p.y << "}}";
-            if(points.back() != p){
-                jsonstring << ",";
-            }
+            ofLogNotice() << p;
             
+            if(0 != i){
+                
+                jsonstring<<",{\"point\":{\"x\":"<<p.x<<",\"y\":"<<p.y << "}}";
+                
+            }else{
+                jsonstring<<"{\"point\":{\"x\":"<<p.x<<",\"y\":"<<p.y << "}}";
+            }
+            i++;
         }
         jsonstring << "]" ;
+        mtx.unlock();
         return jsonstring.str();
     }
     
