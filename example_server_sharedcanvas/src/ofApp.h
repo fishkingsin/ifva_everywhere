@@ -7,7 +7,7 @@
 #include "Drawing.h"
 
 #include "ofxGui.h"
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp {
     
 public:
     void setup();
@@ -45,4 +45,54 @@ public:
     ofParameter<int> delay;
     void onParaChanged(int &i);
     vector<ofFile>jsonFiles;
+    
+    void threadedFunction();
+    void replayDrawing();
+    void saveDrawing(Drawing *drawing);
+    bool isNeedDrawing ;
+    class ReplayThread : public ofThread{
+    public:
+        ofxLibwebsockets::Connection * connection;
+        string setupstring;
+        Json::Value root;
+        
+        void  startReplay(ofxLibwebsockets::Connection * _connection , Json::Value _root , string _setupstring){
+            setupstring = _setupstring;
+            connection = _connection;
+            root = _root;
+            
+            startThread();
+            
+        }
+        ~ReplayThread(){
+            stopThread();
+        }
+        //--------------------------------------------------------------
+        void threadedFunction(){
+            while(isThreadRunning()){
+                if(lock()){
+                    
+                    connection->send(setupstring);
+                    Json::Value points = root["points"];
+                    int n = points.size();
+                    //testing
+                    Json::FastWriter fastWriter;
+                    for (int j = 0 ; j < n ; j++){
+                        ostringstream message;
+                        message << "{\"id\":" << ofToString(-1) << ",\"point\":" << fastWriter.write(points[j]["point"]) << "," << "\"color\":"<< fastWriter.write(root["setup"]["color"]) << "}";
+                        ofLogNotice("message") << message.str();
+                        connection->send( message.str() );
+                        
+                        ofSleepMillis(50);
+                    }
+                    stopThread();
+                    unlock();
+                    delete this;
+                }
+            }
+        }
+    };
+    vector<ReplayThread*>replayThreads ;
+    
 };
+

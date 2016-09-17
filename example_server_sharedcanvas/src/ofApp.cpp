@@ -33,6 +33,7 @@ void ofApp::setup(){
 void ofApp::onParaChanged(int &i){
     server.send("{\"delay\":\"" + ofToString( i ) + "\"}" );
 }
+
 //--------------------------------------------------------------
 void ofApp::update(){
     if ( toDelete.size() > 0 ){
@@ -114,6 +115,7 @@ void ofApp::onClose( ofxLibwebsockets::Event& args ){
     // remove from color map
     for ( auto & it : drawings){
         Drawing * d = it.second;
+        saveDrawing(d);
         if ( *d->conn == args.conn ){
             toDelete.push_back(it.second);
             d->conn == NULL;
@@ -174,31 +176,7 @@ void ofApp::keyPressed(int key){
         case OF_KEY_BACKSPACE:
         {
             for ( auto & it : drawings){
-                Drawing * d = it.second;
-                if(d->points.size()>0){
-                    string jsonString = d->getPointsJSONString("setup");
-                    ofLogNotice("jsonString") << jsonString;
-                    Json::Value root;
-                    Json::Reader reader;
-                    bool parsingSuccessful = reader.parse( jsonString.c_str(), root );     //parse process
-                    if ( !parsingSuccessful )
-                    {
-                        std::cout  << "Failed to parse"
-                        << reader.getFormattedErrorMessages();
-                        return 0;
-                    }
-                    ofBuffer buffer;
-                    buffer.append(jsonString);
-                    ostringstream filename;
-                    filename << ofGetTimestampString() << ".json";
-                    ofFile file;
-                    file.open(filename.str(),ofFile::WriteOnly);
-                    file<<jsonString;
-                    std::cout << root["setup"]["id"].asInt() << std::endl;
-//                    toDelete.push_back(it.second);
-                    
-                    
-                }
+                saveDrawing(it.second);
                 
             }
         }
@@ -209,62 +187,12 @@ void ofApp::keyPressed(int key){
             dir.allowExt("json");
             int n = dir.listDir("");
             for (auto & f : dir.getFiles()){
-            
+                
                 ofLogNotice ("json ") << f.getFileName();
                 jsonFiles.push_back(f);
             }
-            
-            int index = ofRandom(n);
-            ofFile openFile(jsonFiles[index].getAbsolutePath());
-            
-            string jsonString = openFile.readToBuffer();
-            ofLogNotice() << "jsonString " << jsonString;
-            Json::Value root;
-            Json::Reader reader;
-            bool parsingSuccessful = reader.parse( jsonString , root );     //parse process
-            if(parsingSuccessful){
-                
-                ofLogNotice("parsingSuccessful setup") << root["setup"].toStyledString();
-                vector<ofxLibwebsockets::Connection *> connections = server.getConnections();
-                ofLogNotice("parsingSuccessful points") << root["points"].toStyledString();
-                server.send("{\"erase\":\"" + ofToString( -1 ) + "\"}" );
-                for ( int i=0; i<connections.size(); i++){
-                    
-                    Json::FastWriter fastWriter;
-                    std::string setupstring = fastWriter.write(root["setup"]);
-                    int _id = root["setup"]["id"].asInt();
-                     connections[i]->send(setupstring);
-
-                    
-                    map<int, Drawing*>::iterator it = drawings.find(0);
-                    Drawing * d = it->second;
-                    d->points.clear();
-                    d->_id = -1;
-                    d->color.set(root["setup"]["color"]["r"].asInt(),
-                                 root["setup"]["color"]["g"].asInt(),
-                                 root["setup"]["color"]["b"].asInt());
-                    
-                    
-                    Json::Value points = root["points"];
-                    int n = points.size();
-                    //testing
-                    for (int j = 0 ; j < n ; j++){
-                        ostringstream message;
-                        message << "{\"id\":" << ofToString(_id) << ",\"point\":" << fastWriter.write(points[j]["point"]) << "," << "\"color\":"<< fastWriter.write(root["setup"]["color"]) << "}";
-                        ofLogNotice("message") << message.str();
-                         connections[i]->send( message.str() );
-                        d->addPoint(ofPoint(points[j]["point"]["x"].asInt() ,points[j]["point"]["y"].asInt()));
-                        ofSleepMillis(50);
-                    }
-                    //testing
-                    
-                }
-                auto it = std::find(jsonFiles.begin(), jsonFiles.end(), openFile);
-                if(it != jsonFiles.end())
-                    jsonFiles.erase(it);
-                break;
-                
-            }
+            isNeedDrawing = true;
+            replayDrawing();
             
         }
             break;
@@ -279,7 +207,102 @@ void ofApp::keyPressed(int key){
             
     }
 }
-
+void ofApp::saveDrawing(Drawing *drawing){
+    Drawing * d = drawing;
+    if(d->_id==-1){
+        
+        return;
+    }
+    if(d->points.size()>0){
+        string jsonString = d->getPointsJSONString("setup");
+        ofLogNotice() <<"jsonString " << jsonString;
+        Json::Value root;
+        Json::Reader reader;
+        bool parsingSuccessful = reader.parse( jsonString.c_str(), root );     //parse process
+        if ( !parsingSuccessful )
+        {
+            std::cout  << "Failed to parse"
+            << reader.getFormattedErrorMessages();
+            return 0;
+        }
+        ofBuffer buffer;
+        buffer.append(jsonString);
+        ostringstream filename;
+        filename << ofGetTimestampString() << ".json";
+        ofFile file;
+        file.open(filename.str(),ofFile::WriteOnly);
+        file<<jsonString;
+        std::cout << root["setup"]["id"].asInt() << std::endl;
+        //                    toDelete.push_back(it.second);
+        
+        
+    }
+}
+void ofApp::replayDrawing(){
+    if(isNeedDrawing){
+        int n = jsonFiles.size();
+        int index = ofRandom(n);
+        ofFile openFile(jsonFiles[index].getAbsolutePath());
+        
+        string jsonString = openFile.readToBuffer();
+        ofLogNotice() << "jsonString " << jsonString;
+        Json::Value root;
+        Json::Reader reader;
+        bool parsingSuccessful = reader.parse( jsonString , root );     //parse process
+        if(parsingSuccessful){
+            
+            ofLogNotice("parsingSuccessful setup") << root["setup"].toStyledString();
+            vector<ofxLibwebsockets::Connection *> connections = server.getConnections();
+            ofLogNotice("parsingSuccessful points") << root["points"].toStyledString();
+            server.send("{\"erase\":\"" + ofToString( -1 ) + "\"}" );
+            
+            map<int, Drawing*>::iterator drawingIT = drawings.find(0);
+            Drawing * d = drawingIT->second;
+            d->points.clear();
+            d->_id = -1;
+            d->color.set(root["setup"]["color"]["r"].asInt(),
+                         root["setup"]["color"]["g"].asInt(),
+                         root["setup"]["color"]["b"].asInt());
+            Json::FastWriter fastWriter;
+            
+            root["setup"]["id"] = d->_id;
+            std::string setupstring = fastWriter.write(root["setup"]);
+            Json::Value points = root["points"];
+            int n = points.size();
+            for (int j = 0 ; j < n ; j++){
+                d->addPoint(ofPoint(points[j]["point"]["x"].asInt() ,points[j]["point"]["y"].asInt()));
+            }
+            
+            replayThreads.clear();
+            for ( int i=0; i<connections.size(); i++){
+                ReplayThread *replayThread = new ReplayThread();
+                replayThreads.push_back(replayThread);
+                replayThread->startReplay(connections[i], root, setupstring);
+                
+                //                connections[i]->send(setupstring);
+                //                Json::Value points = root["points"];
+                //                int n = points.size();
+                //                //testing
+                //                for (int j = 0 ; j < n ; j++){
+                //                    ostringstream message;
+                //                    message << "{\"id\":" << ofToString(d->_id) << ",\"point\":" << fastWriter.write(points[j]["point"]) << "," << "\"color\":"<< fastWriter.write(root["setup"]["color"]) << "}";
+                //                    ofLogNotice("message") << message.str();
+                //                    connections[i]->send( message.str() );
+                //                    d->addPoint(ofPoint(points[j]["point"]["x"].asInt() ,points[j]["point"]["y"].asInt()));
+                //                    ofSleepMillis(50);
+                //                }
+                //                //testing
+                
+            }
+            auto it = std::find(jsonFiles.begin(), jsonFiles.end(), openFile);
+            if(it != jsonFiles.end())
+                jsonFiles.erase(it);
+        }
+        
+        isNeedDrawing = false;
+    }
+    
+}
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
     
@@ -292,23 +315,23 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-        ofPoint p(x,y);
+    ofPoint p(x,y);
     
-        map<int, Drawing*>::iterator it = drawings.find(0);
-        Drawing * d = it->second;
-        d->addPoint(p);
-        server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+    map<int, Drawing*>::iterator it = drawings.find(0);
+    Drawing * d = it->second;
+    d->addPoint(p);
+    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     
-        ofPoint p(x,y);
+    ofPoint p(x,y);
     
-        map<int, Drawing*>::iterator it = drawings.find(0);
-        Drawing * d = it->second;
-        d->addPoint(p);
-        server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+    map<int, Drawing*>::iterator it = drawings.find(0);
+    Drawing * d = it->second;
+    d->addPoint(p);
+    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------
