@@ -1,7 +1,7 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
-     ofSetLogLevel(OF_LOG_VERBOSE);
+//     ofSetLogLevel(OF_LOG_VERBOSE);
     ofxXmlSettings settings;
 
     ofxLibwebsockets::ClientOptions options = ofxLibwebsockets::defaultClientOptions();
@@ -297,7 +297,7 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
             }
             else if (args.json["id"].asInt() != id){
                 cout << "received point" << endl;
-                ofPoint point = ofPoint( args.json["point"]["x"].asFloat(), args.json["point"]["y"].asFloat() );
+                
 
                 // for some reason these come across as strings via JSON.stringify!
                 int r = ofToInt(args.json["color"]["r"].asString());
@@ -323,7 +323,11 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
                     drawings.insert( make_pair( d->_id, d ));
                     cout << "new drawing with id:" << _id << endl;
                 }
-                d->addPoint(point);
+                
+                if(!args.json["point"].isNull()){
+                    ofPoint point = ofPoint( args.json["point"]["x"].asInt(), args.json["point"]["y"].asInt() );
+                    d->addPoint(point);
+                }
             }
         }else {
             
