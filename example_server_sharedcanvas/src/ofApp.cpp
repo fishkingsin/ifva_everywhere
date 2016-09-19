@@ -7,7 +7,10 @@ void ofApp::setup(){
     //bConnected = server.setup( 9093 );
     
     ofxLibwebsockets::ServerOptions options = ofxLibwebsockets::defaultServerOptions();
-    options.port = 9092;
+    ofxXmlSettings settings;
+    settings.load("settings.xml");
+    
+    options.port = settings.getValue("SETTINGS:PORT", 9092);;
     bConnected = server.setup( options );
     
     

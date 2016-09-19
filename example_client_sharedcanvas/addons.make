@@ -1,4 +1,3 @@
 ofxLibwebsockets
 ofxLibApa102
 ofxXmlSettings
-ofxWiringPi

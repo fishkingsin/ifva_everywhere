@@ -3,7 +3,7 @@
 #include "ofMain.h"
 
 #include "ofxLibwebsockets.h"
-
+#include "ofxXmlSettings.h"
 #include "Drawing.h"
 
 #include "ofxGui.h"
