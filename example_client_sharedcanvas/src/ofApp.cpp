@@ -145,18 +145,22 @@ void ofApp::update(){
     map<int, Drawing*>::iterator it = drawings.begin();
     
     ofNoFill();
-    
+    //check is it new draw point -basara
     for (it; it != drawings.end(); ++it){
         Drawing * d = it->second;
         ofSetColor( d->color );
         ofBeginShape();
-       ofSetLineWidth(1);
-        for ( int i=0; i<(int)d->points.size(); i++){
-           ofVertex( d->points[i].x,d->points[i].y);
-            // ofDrawRectangle(d->points[i].x,d->points[i].y,1,1);
+        for ( int i=0; i<d->points.size(); i++){
+            if(d->points[i].x<0) {
+                ofEndShape(false);
+                ofBeginShape();
+            } else {
+                ofVertex( d->points[i].x,d->points[i].y);
+            }
         }
-       ofEndShape(false);
+        ofEndShape(false);
     }
+    //end check - basara
     ofFill();
     largeFbo.end();
     //draw incoming drawing
