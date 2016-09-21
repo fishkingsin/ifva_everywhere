@@ -2,3 +2,4 @@ ofxIpVideoGrabber
 ofxLibApa102
 ofxLibwebsockets
 ofxWiringPi
+ofxXmlSettings
