@@ -1,6 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxXmlSettings.h"
+#include "IPVideoGrabber.h"
+using namespace ofx;
+
 
 class ofApp : public ofBaseApp{
 
@@ -20,5 +24,6 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
+    std::vector<std::shared_ptr<Video::IPVideoGrabber>> grabbers;
+
 };

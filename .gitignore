@@ -28,3 +28,4 @@
 *.out
 *.app
 example_server_sharedcanvas/build
+example_basic_ip_video_server/build

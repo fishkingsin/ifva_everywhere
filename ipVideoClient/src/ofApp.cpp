@@ -1,18 +1,34 @@
 #include "ofApp.h"
-
+int w = 320;
+int h = 240;
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+    
+    auto c = std::make_shared<Video::IPVideoGrabber>();
+    
+    
+    Poco::URI uri("http://127.0.0.1:7890/ipvideo");
+    c->setURI(uri);
+    c->connect();
+    
+    grabbers.push_back(c);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    for(std::size_t i = 0; i < grabbers.size(); i++)
+    {
+        grabbers[i]->update();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    ofSetColor(255,255,255,255);
+    for(std::size_t i = 0; i < grabbers.size(); i++)
+    {
+        grabbers[i]->draw(0,0,w,h);
+    }
 }
 
 //--------------------------------------------------------------
