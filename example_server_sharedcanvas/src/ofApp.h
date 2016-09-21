@@ -49,7 +49,7 @@ public:
     void threadedFunction();
     void replayDrawing();
     void saveDrawing(Drawing *drawing);
-    bool isNeedDrawing ;
+    
     class ReplayThread : public ofThread{
     public:
         ofxLibwebsockets::Connection * connection;
