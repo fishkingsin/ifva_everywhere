@@ -171,6 +171,70 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>FA89799CEDDEA203A5D0AB2B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxTimer.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxTimer/src/ofxTimer.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>83998D60BDE502BF9DE8752E</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>E5C5E0A3373A5E7AF0D54C51</string>
+					<string>FA89799CEDDEA203A5D0AB2B</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>F57AC37CF6942008ABED8A1B</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>83998D60BDE502BF9DE8752E</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxTimer</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>E30C7DC0BD770DC8960DFAAC</key>
+			<dict>
+				<key>fileRef</key>
+				<string>E5C5E0A3373A5E7AF0D54C51</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>E5C5E0A3373A5E7AF0D54C51</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxTimer.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxTimer/src/ofxTimer.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>CCD326ED8E01272042317DD2</key>
 			<dict>
 				<key>fileRef</key>
@@ -1074,6 +1138,7 @@
 				<array>
 					<string>480A780D8D0308AE4A368801</string>
 					<string>AAE50E341C7382A4EF10AF5A</string>
+					<string>F57AC37CF6942008ABED8A1B</string>
 					<string>1F4FB5C423662B96ADFDCC0B</string>
 				</array>
 				<key>isa</key>
@@ -1242,6 +1307,7 @@
 						<string>../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets</string>
 						<string>../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src</string>
 						<string>../../../addons/ofxLibwebsockets/src</string>
+						<string>../../../addons/ofxTimer/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -1315,6 +1381,7 @@
 						<string>../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets</string>
 						<string>../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src</string>
 						<string>../../../addons/ofxLibwebsockets/src</string>
+						<string>../../../addons/ofxTimer/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -1389,6 +1456,7 @@
 					<string>6D73A566CFEC0B462FE6E43C</string>
 					<string>F3AD9E2A2E56B6AF32A0BDAF</string>
 					<string>CCD326ED8E01272042317DD2</string>
+					<string>E30C7DC0BD770DC8960DFAAC</string>
 					<string>63B57AC5BF4EF088491E0317</string>
 					<string>933A2227713C720CEFF80FD9</string>
 					<string>9D44DC88EF9E7991B4A09951</string>
@@ -1490,6 +1558,7 @@
 						<string>../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets</string>
 						<string>../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src</string>
 						<string>../../../addons/ofxLibwebsockets/src</string>
+						<string>../../../addons/ofxTimer/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -1553,6 +1622,7 @@
 						<string>../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/include/ofxLibwebsockets</string>
 						<string>../../../addons/ofxLibwebsockets/libs/ofxLibwebsockets/src</string>
 						<string>../../../addons/ofxLibwebsockets/src</string>
+						<string>../../../addons/ofxTimer/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
