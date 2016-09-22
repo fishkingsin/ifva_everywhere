@@ -96,7 +96,7 @@ void ofApp::draw(){
     ofSetColor(0,255);
     if(polyModeOdd){
         ofSetPolyMode(OF_POLY_WINDING_ODD);
-        master.beginShape();
+        ofBeginShape();
     }
     
     
@@ -114,7 +114,7 @@ void ofApp::draw(){
     
     
     if(polyModeOdd){
-        master.endShape();
+        ofEndShape();
     }
     
     LEDTexture.end();

@@ -37,7 +37,8 @@ class ofApp : public ofBaseApp{
         bool polyModeOdd = true;
     
         ofColor bgColor;
-        ofxVectorGraphics master;
+//        ofxVectorGraphics master;
+        ofVbo vbo;
     
         ofFbo LEDTexture;
     

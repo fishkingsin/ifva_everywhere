@@ -38,7 +38,7 @@ void Shape::draw(){
     ofSetPolyMode(OF_POLY_WINDING_ODD);
     
     if (!master){
-         output.beginShape();
+        ofBeginShape();
         _z=0;
     }else{
         ofPushMatrix();
@@ -54,7 +54,7 @@ void Shape::draw(){
         float rx = x + cos(angle) * radius;
         float ry = y + sin(angle) * radius;
         
-        output.polyVertex(rx, ry);
+        ofVertex(rx, ry);
         angle += step;
     }
     
@@ -64,13 +64,13 @@ void Shape::draw(){
         float rx = x + cos(angle) * (radius-weight);
         float ry = y + sin(angle) * (radius-weight);
         
-        output.polyVertex(rx, ry);
+        ofVertex(rx, ry);
         angle += step;
     }
     
     
     if (!master){
-        output.endShape(false);
+        ofEndShape();
     }else{
         ofPopMatrix();
     }

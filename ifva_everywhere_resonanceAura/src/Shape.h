@@ -10,7 +10,7 @@
 #define shape_h
 
 #include "ofMain.h"
-#include "ofxVectorGraphics.h"
+
 
 class Shape {
     
@@ -29,7 +29,7 @@ public:
     int weight, _weight;
     int _size, size;
     ofColor color;
-    ofxVectorGraphics output;
+//    ofxVectorGraphics output;
     
    // bool flip =false;
     bool master = false;

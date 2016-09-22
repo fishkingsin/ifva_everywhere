@@ -12,7 +12,7 @@
 
 #include "ofMain.h"
 #include "Shape.h"
-#include "ofxVectorGraphics.h"
+
 
 class Beat {
     
@@ -42,7 +42,8 @@ public:
     int edge;
     ofColor color;
     
-    ofxVectorGraphics output;
+//    ofxVectorGraphics output;
+    
     
     void hit(char _direction);
     
