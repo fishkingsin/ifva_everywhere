@@ -18,9 +18,20 @@ public:
     
     void addPoint( ofPoint p ){
         if ( points.size() + 1 > 500 ){
-            points.erase( points.begin() );
+            //points.erase( points.begin() );
         }
         points.push_back( p );
+    }
+    
+    void erase() {
+        points.clear();
+    }
+    
+    void eraseLast() {
+        while (points.back().x >= 0) {
+            points.pop_back();
+        }
+        
     }
     
     string getColorJSON( bool object=false){

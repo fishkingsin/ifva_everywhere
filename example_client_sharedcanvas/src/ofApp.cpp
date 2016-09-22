@@ -294,6 +294,11 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
             else if(!args.json["erase"].isNull()){
                 cout << "erase:" << args.json["erase"].asInt() << endl;
                 drawings.erase(args.json["erase"].asInt());
+                if(args.json["erase"]!=-1) {
+                    drawings.find(ofToInt(args.json["id"].asString()))->second->eraseLast();
+                } else {
+                    drawings.find(ofToInt(args.json["id"].asString()))->second->erase();
+                }
             }
             else if (args.json["id"].asInt() != id){
                 cout << "received point" << endl;
@@ -328,7 +333,7 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
                     ofPoint point = ofPoint( args.json["point"]["x"].asInt(), args.json["point"]["y"].asInt() );
                     d->addPoint(point);
                 }
-            }
+            } 
         }else {
             
         }

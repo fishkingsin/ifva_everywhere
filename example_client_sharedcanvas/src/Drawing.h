@@ -23,6 +23,17 @@ public:
         points.push_back( p );
     }
     
+    void erase() {
+        points.clear();
+    }
+    
+    void eraseLast() {
+        while (points.back().x >= 0) {
+            points.pop_back();
+        }
+        
+    }
+    
     string getColorJSON( bool object=false){
         int r = color.r;
         int g = color.g;
