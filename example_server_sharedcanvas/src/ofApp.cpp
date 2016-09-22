@@ -10,7 +10,7 @@ void ofApp::setup(){
     ofxXmlSettings settings;
     settings.load("settings.xml");
     
-    options.port = settings.getValue("SETTINGS:PORT", 9092);;
+    options.port = settings.getValue("SETTINGS:PORT", 9092);
     bConnected = server.setup( options );
     
     
@@ -29,7 +29,7 @@ void ofApp::setup(){
     
     drawings.insert( make_pair( d->_id, d ));
     panel.setup();
-    delay.set("delay", 0,0,100);
+    delay.set("delay", 0,0,1000);
     panel.add(delay);
     delay.addListener(this, &ofApp::onParaChanged);
 }
@@ -97,7 +97,8 @@ void ofApp::onOpen( ofxLibwebsockets::Event& args ){
     
     Drawing * d = new Drawing();
     d->_id = canvasID++;
-    d->color.set(ofRandom(255),ofRandom(255),ofRandom(255));;
+    d->color.set(ofRandom(255),ofRandom(255),ofRandom(255));
+    d->color.set(200, 200, 200);
     d->conn = &( args.conn );
     
     drawings.insert( make_pair( d->_id, d ));
@@ -145,20 +146,28 @@ void ofApp::onMessage( ofxLibwebsockets::Event& args ){
     try{
         // trace out string messages or JSON messages!
         if ( !args.json.isNull() ){
-            ofPoint point = ofPoint( args.json["point"]["x"].asFloat(), args.json["point"]["y"].asFloat() );
-            
-            // for some reason these come across as strings via JSON.stringify!
-            int r = ofToInt(args.json["color"]["r"].asString());
-            int g = ofToInt(args.json["color"]["g"].asString());
-            int b = ofToInt(args.json["color"]["b"].asString());
-            ofColor color = ofColor( r, g, b );
-            
-            int _id = ofToInt(args.json["id"].asString());
-            
-            map<int, Drawing*>::const_iterator it = drawings.find(_id);
-            Drawing * d = it->second;
-            if(d!=NULL){
-                d->addPoint(point);
+            if(args.json["erase"].isNull()) {
+                ofPoint point = ofPoint( args.json["point"]["x"].asFloat(), args.json["point"]["y"].asFloat() );
+                
+                // for some reason these come across as strings via JSON.stringify!
+                int r = ofToInt(args.json["color"]["r"].asString());
+                int g = ofToInt(args.json["color"]["g"].asString());
+                int b = ofToInt(args.json["color"]["b"].asString());
+                ofColor color = ofColor( r, g, b );
+                
+                int _id = ofToInt(args.json["id"].asString());
+                
+                map<int, Drawing*>::const_iterator it = drawings.find(_id);
+                Drawing * d = it->second;
+                if(d!=NULL){
+                    d->addPoint(point);
+                }
+            } else {
+                if(args.json["erase"]!=-1) {
+                    drawings.find(ofToInt(args.json["id"].asString()))->second->eraseLast();
+                } else {
+                    drawings.find(ofToInt(args.json["id"].asString()))->second->erase();
+                }
             }
         } else {
         }

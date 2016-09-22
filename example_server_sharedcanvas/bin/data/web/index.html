@@ -33,6 +33,9 @@
 		var ledAttr = function() 
 		{ 
 			this.speed=0 
+			this.stroke=1;
+			this.clear = function() { eraseAll();};
+			this.clearLast = function() {eraseLast();};
 		};
 		var cirAttr = function() 
 		{
@@ -54,17 +57,20 @@
 	    var sq = new sqAttr();
 	    var cF = gui.addFolder('Cicrle');
 		
-		cF.open();
+		// cF.open();
 
-		var rF = gui.addFolder('Square');
-		rF.add(sq, 'length',1,20);
-		rF.add(sq, 'angle',0,90);
-		rF.add(sq, 'use');
-		rF.open();
+		// var rF = gui.addFolder('Square');
+		// rF.add(sq, 'length',1,20);
+		// rF.add(sq, 'angle',0,90);
+		// rF.add(sq, 'use');
+		// rF.open();
 
-		var ledSpeed = gui.add(led, 'speed', 0, 500);
-		var circleR = cF.add(cir, 'radius', 1, 20);
-		var circleUsing = cF.add(cir, 'use');
+		//var ledSpeed = gui.add(led, 'speed', 0, 500);
+		//var strokeW = gui.add(led, 'stroke', 1, 20).step(1);
+		var clearField = gui.add(led, 'clear');
+		var clearLast = gui.add(led, 'clearLast');
+		//var circleR = cF.add(cir, 'radius', 1, 20);
+		//var circleUsing = cF.add(cir, 'use');
 		 
 		//cF.add(obj, 'speed', 0, 500);	
 	</script>
