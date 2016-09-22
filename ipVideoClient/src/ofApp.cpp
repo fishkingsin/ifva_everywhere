@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include "ofxXmlSettings.h"
 int w = 320;
 int h = 240;
 //--------------------------------------------------------------
@@ -6,8 +7,10 @@ void ofApp::setup(){
     
     auto c = std::make_shared<Video::IPVideoGrabber>();
     
+    ofxXmlSettings settings;
+    settings.load("settings.xml");
     
-    Poco::URI uri("http://127.0.0.1:7890/ipvideo");
+    Poco::URI uri(settings.getValue("SETTINGS:URL", "http://127.0.0.1:7890/ipvideo"));
     c->setURI(uri);
     c->connect();
     
