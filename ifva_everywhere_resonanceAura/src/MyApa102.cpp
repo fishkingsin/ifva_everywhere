@@ -18,6 +18,9 @@ void MyApa102::setup(ofFbo *ifbo){
     pixels.allocate(width, height,OF_IMAGE_COLOR);
     length = 4+(height*4)+4;
     buf.resize(width);
+    for ( int i = 0 ; i < 256 ; i++){
+        GAMMA[i] = int(pow(float(i) / 255.0, 2.7) * 255.0  * 0.1 + 0.5) ;
+    }
     for(int i = 0 ; i < buf.size() ; i++){
         buf[i] = (u_int8_t*)malloc(length);
         buf[i][0] = 0x00;
