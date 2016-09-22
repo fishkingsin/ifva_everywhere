@@ -32,10 +32,18 @@ void ofApp::setup(){
     delay.set("delay", 0,0,1000);
     panel.add(delay);
     delay.addListener(this, &ofApp::onParaChanged);
+    
+    lineWidth.set("lineWidth", 1,0,500);
+    panel.add(lineWidth);
+    lineWidth.addListener(this, &ofApp::onLineWidthParaChanged);
 }
 void ofApp::onParaChanged(int &i){
-    server.send("{\"delay\":\"" + ofToString( i ) + "\"}" );
+    server.send("{\"delay\":" + ofToString( i ) + "}" );
 }
+void ofApp::onLineWidthParaChanged(int &i){
+    server.send("{\"lineWidth\":" + ofToString( i ) + "}" );
+}
+
 
 //--------------------------------------------------------------
 void ofApp::update(){
