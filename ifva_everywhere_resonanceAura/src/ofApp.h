@@ -1,11 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxVectorGraphics.h"
-
 #include "Shape.h"
-//#include "Beat.h"
-
 
 class ofApp : public ofBaseApp{
 
