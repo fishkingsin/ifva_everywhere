@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "Shape.h"
+#include "MyApa102.h"
 
 class ofApp : public ofBaseApp{
 
@@ -9,6 +10,7 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -38,6 +40,5 @@ class ofApp : public ofBaseApp{
     
         ofFbo LEDTexture;
     
-    
-        
+    MyApa102 myApa102;
 };

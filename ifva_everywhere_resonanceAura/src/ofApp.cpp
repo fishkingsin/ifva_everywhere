@@ -11,8 +11,10 @@ int posXList[5] = {-180,0, 180, 360, 540};
 
 
 void ofApp::setup(){
+#ifdef TARGET_OSX
+    ofSetLogLevel(OF_LOG_VERBOSE);
     
-
+#endif
     bgColor.set(0,255);
     
     LEDTexture.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
@@ -27,9 +29,11 @@ void ofApp::setup(){
     
     GeneratePattern();
     GeneratePos();
-    
+    myApa102.setup(&LEDTexture);
 }
-
+void ofApp::exit(){
+    myApa102.stop();
+}
 //--------------------------------------------------------------
 void ofApp::update(){
     for (int i=0; i<totalNumShape; i++){
@@ -45,7 +49,7 @@ void ofApp::update(){
     if (ofGetFrameNum()% 720 == 0){
         GeneratePattern();
     }
-    
+    myApa102.update();
  }
 
 

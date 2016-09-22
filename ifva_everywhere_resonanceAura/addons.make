@@ -1,2 +1,5 @@
 ofxGui
+ofxLibApa102
+ofxLibwebsockets
+ofxWiringPi
 ofxXmlSettings
