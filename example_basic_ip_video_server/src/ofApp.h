@@ -28,6 +28,7 @@
 
 #include "ofMain.h"
 #include "ofxHTTP.h"
+#include "ofxSypthon.h"
 
 
 class ofApp: public ofBaseApp
