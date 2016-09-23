@@ -42,8 +42,9 @@ public:
     void onBroadcast( ofxLibwebsockets::Event& args );
     
     ofxPanel panel;
-    ofParameter<int> delay;
+    ofParameter<int> delay,lineWidth;
     void onParaChanged(int &i);
+    void onLineWidthParaChanged(int &i);
     vector<ofFile>jsonFiles;
     
     void threadedFunction();

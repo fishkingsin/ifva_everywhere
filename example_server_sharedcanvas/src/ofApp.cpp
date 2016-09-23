@@ -32,10 +32,18 @@ void ofApp::setup(){
     delay.set("delay", 0,0,1000);
     panel.add(delay);
     delay.addListener(this, &ofApp::onParaChanged);
+    
+    lineWidth.set("lineWidth", 1,1,10);
+    panel.add(lineWidth);
+    lineWidth.addListener(this, &ofApp::onLineWidthParaChanged);
 }
 void ofApp::onParaChanged(int &i){
-    server.send("{\"delay\":\"" + ofToString( i ) + "\"}" );
+    server.send("{\"delay\":" + ofToString( i ) + "}" );
 }
+void ofApp::onLineWidthParaChanged(int &i){
+    server.send("{\"lineWidth\":" + ofToString( i ) + "}" );
+}
+
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -335,23 +343,23 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    ofPoint p(x,y);
-    
-    map<int, Drawing*>::iterator it = drawings.find(0);
-    Drawing * d = it->second;
-    d->addPoint(p);
-    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+//    ofPoint p(x,y);
+//    
+//    map<int, Drawing*>::iterator it = drawings.find(0);
+//    Drawing * d = it->second;
+//    d->addPoint(p);
+//    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     
-    ofPoint p(x,y);
-    
-    map<int, Drawing*>::iterator it = drawings.find(0);
-    Drawing * d = it->second;
-    d->addPoint(p);
-    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+//    ofPoint p(x,y);
+//    
+//    map<int, Drawing*>::iterator it = drawings.find(0);
+//    Drawing * d = it->second;
+//    d->addPoint(p);
+//    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------
