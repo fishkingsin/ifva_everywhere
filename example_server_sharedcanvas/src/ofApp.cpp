@@ -97,8 +97,9 @@ void ofApp::onOpen( ofxLibwebsockets::Event& args ){
     
     Drawing * d = new Drawing();
     d->_id = canvasID++;
-    d->color.set(ofRandom(255),ofRandom(255),ofRandom(255));
-    d->color.set(200, 200, 200);
+//    d->color.set(ofRandom(255),ofRandom(255),ofRandom(255));
+        d->color.set(200,ofRandom(0,100),ofRandom(200));
+    //d->color.set(200, 200, 200);
     d->conn = &( args.conn );
     
     drawings.insert( make_pair( d->_id, d ));

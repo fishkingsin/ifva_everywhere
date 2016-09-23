@@ -52,24 +52,24 @@ $(window).load(function() {
 		alert("Sorry, your browser doesn't support canvas!");
 	}
 
-	ledSpeed.onFinishChange(function(value) {
+	//ledSpeed.onFinishChange(function(value) {
   		// Fires when a controller loses focus.
   		
-	});
+	//});
 
-	strokeW.onFinishChange(function(value) {
+	//strokeW.onFinishChange(function(value) {
   		// Fires when a controller loses focus.
-  		strokeW = parseInt(value);
-	});
+  	//	strokeW = parseInt(value);
+	//});
 
-	circleUsing.onFinishChange(function(value) {
-  		eraseAll();
-	});
+	// circleUsing.onFinishChange(function(value) {
+ //  		eraseAll();
+	// });
 
-	circleR.onFinishChange(function(value) {
-  		// Fires when a controller loses focus.
-  		alert("The new value is " + value);
-	});
+	// circleR.onFinishChange(function(value) {
+ //  		// Fires when a controller loses focus.
+ //  		alert("The new value is " + value);
+	// });
 
 	
 
