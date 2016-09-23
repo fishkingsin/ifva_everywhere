@@ -33,7 +33,7 @@ public:
     unsigned int microseconds;
     int width ;
     int height;
-    
+    float currentTime;
 };
 
 #endif /* MyApa102_h */

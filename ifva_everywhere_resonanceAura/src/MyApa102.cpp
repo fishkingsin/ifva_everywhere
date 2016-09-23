@@ -41,6 +41,9 @@ void MyApa102::setup(ofFbo *ifbo){
 }
 
 void MyApa102::update(){
+    microseconds = (int)(sinf(currentTime)*150)+150;
+    currentTime+=0.01;
+//    ofLogVerbose() << "microseconds " << microseconds;
     fbo->readToPixels(pixels);
     for(int x = 0 ; x < width ; x++){
         
@@ -90,7 +93,7 @@ void MyApa102::threadedFunction(){
                 
                 
 #ifdef TARGET_OSX
-                ofLogVerbose("threadedFunction()") << "apa102.send(buf["<<x<<"], length);";
+//                ofLogVerbose("threadedFunction()") << "apa102.send(buf["<<x<<"], length);";
 #else
                 usleep(microseconds);
                 apa102.send(buf[x], length);
