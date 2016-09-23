@@ -33,7 +33,7 @@ void ofApp::setup(){
     panel.add(delay);
     delay.addListener(this, &ofApp::onParaChanged);
     
-    lineWidth.set("lineWidth", 1,0,500);
+    lineWidth.set("lineWidth", 1,1,10);
     panel.add(lineWidth);
     lineWidth.addListener(this, &ofApp::onLineWidthParaChanged);
 }
@@ -342,12 +342,12 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    ofPoint p(x,y);
-    
-    map<int, Drawing*>::iterator it = drawings.find(0);
-    Drawing * d = it->second;
-    d->addPoint(p);
-    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
+//    ofPoint p(x,y);
+//    
+//    map<int, Drawing*>::iterator it = drawings.find(0);
+//    Drawing * d = it->second;
+//    d->addPoint(p);
+//    server.send( "{\"id\":-1,\"point\":{\"x\":\""+ ofToString(x)+"\",\"y\":\""+ofToString(y)+"\"}," + d->getColorJSON() +"}");
 }
 
 //--------------------------------------------------------------
