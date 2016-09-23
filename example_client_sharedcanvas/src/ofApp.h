@@ -58,4 +58,5 @@ class ofApp : public ofBaseApp , ofThread{
         unsigned int microseconds;
         int width ;
         int height;
+    int lineWidth;
 };
