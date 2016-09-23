@@ -42,7 +42,7 @@ void MyApa102::setup(ofFbo *ifbo){
 
 void MyApa102::update(){
     microseconds = (int)(sinf(currentTime)*150)+150;
-    currentTime+=0.01;
+    currentTime+=0.005;
 //    ofLogVerbose() << "microseconds " << microseconds;
     fbo->readToPixels(pixels);
     for(int x = 0 ; x < width ; x++){
