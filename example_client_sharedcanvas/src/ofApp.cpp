@@ -17,7 +17,7 @@ void ofApp::setup(){
         
         if(numPtTags > 0){
             string server = settings.getValue("SETTINGS:SERVER","localhost");
-            int port = settings.getValue("SETTINGS:port",9092);
+            int port = settings.getValue("SETTINGS:PORT",9092);
             ofLogVerbose() << "loaded settings server "<<server;
             options.host = server;
             options.port = port;

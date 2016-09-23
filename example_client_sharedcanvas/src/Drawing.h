@@ -28,8 +28,10 @@ public:
     }
     
     void eraseLast() {
-        while (points.back().x >= 0) {
-            points.pop_back();
+        if(points.size()>0){
+            while (points.back().x >= 0) {
+                points.pop_back();
+            }
         }
         
     }
