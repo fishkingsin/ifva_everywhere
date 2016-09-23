@@ -28,7 +28,7 @@
 
 #include "ofMain.h"
 #include "ofxHTTP.h"
-#include "ofxSypthon.h"
+#include "ofxSyphon.h"
 
 
 class ofApp: public ofBaseApp
@@ -40,6 +40,15 @@ public:
 
     ofx::HTTP::SimpleIPVideoServer server;
 
-    ofVideoGrabber grabber;
+//    ofVideoGrabber grabber;
 
+    ofxSyphonClient mClient;
+    
+    ofFbo fbo;
+    ofPixels pixels;
+    ofxSyphonServerDirectory dir;
+    
+    void serverAnnounced(ofxSyphonServerDirectoryEventArgs &arg);
+    void serverUpdated(ofxSyphonServerDirectoryEventArgs &args);
+    void serverRetired(ofxSyphonServerDirectoryEventArgs &arg);
 };

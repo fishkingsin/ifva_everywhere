@@ -1,7 +1,6 @@
 #include "ofApp.h"
 #include "ofxXmlSettings.h"
-int w = 320;
-int h = 240;
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     
@@ -15,23 +14,40 @@ void ofApp::setup(){
     c->connect();
     
     grabbers.push_back(c);
+    
+    LEDTexture.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    
+    myApa102.setup(&LEDTexture);
 }
-
+void ofApp::exit(){
+    myApa102.stop();
+}
 //--------------------------------------------------------------
 void ofApp::update(){
     for(std::size_t i = 0; i < grabbers.size(); i++)
     {
         grabbers[i]->update();
     }
+     myApa102.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    LEDTexture.begin();
+    ofClear(255,255,255, 0);
+    
+    
     ofSetColor(255,255,255,255);
     for(std::size_t i = 0; i < grabbers.size(); i++)
     {
-        grabbers[i]->draw(0,0,w,h);
+        grabbers[i]->draw(0,0,ofGetWidth(),ofGetHeight());
     }
+    LEDTexture.end();
+    
+    
+    LEDTexture.draw(0,0);
+    
 }
 
 //--------------------------------------------------------------
