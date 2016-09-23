@@ -108,7 +108,7 @@ void ofApp::update()
     //        server.send(grabber.getPixels());
     //    }
     fbo.begin();
-    ofClear(0); 
+    ofClear(0);
     mClient.draw(0, 0, fbo.getWidth(), fbo.getHeight());
     fbo.end();
     fbo.readToPixels(pixels);
