@@ -14,7 +14,7 @@ Shape::Shape(){
 void Shape::init(){
     size = _size = 10;
     _x = x = ofRandom(ofGetWidth()/2);
-    _x = y = ofGetHeight()/2;
+    _y = y = ofGetHeight()*0.5;//ofRandom(ofGetHeight()/2);
     
     weight =_weight = 0;
     edge = _edge = 4;
